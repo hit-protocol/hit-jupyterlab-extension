@@ -65,6 +65,37 @@ export class CellManager {
     return { ok: false, error: 'Cell not found' };
   }
 
+  public async changeCellType(uid: string, type: 'markdown' | 'code'): Promise<{ok: boolean, error?: string}> {
+    const nbPanel = this.getActiveNotebook();
+    if (!nbPanel) return { ok: false, error: 'No active notebook' };
+    
+    const nb = nbPanel.content;
+    let targetIndex = -1;
+    
+    for (let i = 0; i < nb.widgets.length; i++) {
+      if (nb.widgets[i].model.id === uid || uid.endsWith(nb.widgets[i].model.id)) {
+        targetIndex = i;
+        break;
+      }
+    }
+
+    if (targetIndex === -1) return { ok: false, error: 'Cell not found' };
+
+    nb.activeCellIndex = targetIndex;
+    try {
+      if (type === 'markdown') {
+        await this.app.commands.execute('notebook:change-cell-to-markdown');
+      } else if (type === 'code') {
+        await this.app.commands.execute('notebook:change-cell-to-code');
+      } else {
+        return { ok: false, error: 'Invalid cell type' };
+      }
+      return { ok: true };
+    } catch (e: any) {
+      return { ok: false, error: e.message };
+    }
+  }
+
   public async executeCell(uid: string): Promise<{ok: boolean, output?: string, error?: string}> {
      const nbPanel = this.getActiveNotebook();
      if (!nbPanel) return { ok: false, error: 'No active notebook' };

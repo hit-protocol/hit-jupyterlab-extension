@@ -35,9 +35,10 @@ export class HITRelayClient {
           } else if (action === 'execute_last_cell') {
             res = await this.cellManager.executeLastCell();
           } else if (action === 'execute_cell') {
-            res = await this.cellManager.executeCell(params.uid);
-          } else if (action === 'update_cell') {
+            res = await this.cellManager.executeCell(params.uid);          } else if (action === 'update_cell') {
             res = await this.cellManager.updateCell(params.uid, params.source);
+          } else if (action === 'change_cell_type') {
+            res = await this.cellManager.changeCellType(params.uid, params.type);
           }
 
           this.socket?.send(JSON.stringify({

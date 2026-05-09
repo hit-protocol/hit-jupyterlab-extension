@@ -1,4 +1,4 @@
-﻿import asyncio
+import asyncio
 import json
 import uuid
 import sys
@@ -99,6 +99,24 @@ async def add_and_execute_cell(code: str, commentary: str = ""):
     await send_action("set_hud_intent", {"text": "Step complete ✓"}, timeout=5.0)
     
     return {"status": "success", "output": result.get("output", "(no text output)")}
+
+@mcp.tool()
+async def change_cell_type(uid: str, type: str):
+    """
+    Change the type of an existing cell (e.g. from code to markdown or vice versa).
+    The 'type' parameter must be either 'markdown' or 'code'.
+    """
+    if not relay_ws: return "Error: Not connected to HIT-Relay."
+    if type not in ("markdown", "code"):
+        return "Error: Invalid type. Must be 'markdown' or 'code'."
+        
+    await send_action("set_hud_intent", {"text": f"Converting cell to {type}..."}, timeout=5.0)
+    res = await send_action("change_cell_type", {"uid": uid, "type": type}, timeout=10.0)
+    await send_action("set_hud_intent", {"text": "Cell type updated ✓"}, timeout=5.0)
+    
+    if res.get("status") != "success":
+        return f"Failed: {res}"
+    return "Cell type successfully changed."
 
 async def _run():
     asyncio.create_task(connect_to_relay())

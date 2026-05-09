@@ -39,7 +39,7 @@
     "extension": true,
     "outputDir": "hit-jupyterlab-extension/labextension",
     "_build": {
-      "load": "static\\remoteEntry.53921306bd49245655b9.js",
+      "load": "static\\remoteEntry.857d3200c39a8eb3fd1d.js",
       "extension": "./extension"
     }
   }
