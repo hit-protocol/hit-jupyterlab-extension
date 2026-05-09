@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+env/
+
+# Node / TypeScript
+node_modules/
+lib/
+*.js.map
+tsconfig.tsbuildinfo
+
+# JupyterLab build artefacts (pre-built assets ARE committed — see MANIFEST.in)
+# Uncomment the line below only if you choose NOT to commit pre-built assets:
+# NOTE: hit-jupyterlab-extension/labextension/ is intentionally committed (pre-built assets).
+
+# Jupyter runtime
+.jupyter/
+*.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

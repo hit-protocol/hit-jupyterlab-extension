@@ -1,0 +1,20 @@
+# Include the pre-built labextension assets so `pip install` from a GitHub
+# tarball / sdist works without needing Node.js on the user's machine.
+recursive-include hit-jupyterlab-extension/labextension *
+include hit-jupyterlab-extension/labextension/package.json
+
+# Jupyter server config
+include jupyter-config/server-config/hit_jupyterlab_extension.json
+
+# Project files
+include README.md
+include LICENSE
+include pyproject.toml
+
+# Exclude development artifacts
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude *.js.map
+global-exclude tsconfig.tsbuildinfo
+prune node_modules
+prune lib

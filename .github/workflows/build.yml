@@ -1,0 +1,59 @@
+﻿name: Build & Verify
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build TypeScript labextension
+        run: npm run build:prod
+
+      - name: Install Python build tools
+        run: pip install hatch hatch-jupyter-builder build
+
+      - name: Install extension (with pre-built assets, skipping npm rebuild)
+        run: pip install -e ".[mcp]"
+
+      - name: Verify labextension is registered
+        run: |
+          jupyter labextension list 2>&1 | tee /tmp/labext.txt
+          grep -q "hit-jupyterlab-extension" /tmp/labext.txt && echo "✅ labextension OK" || (echo "❌ labextension NOT found"; exit 1)
+
+      - name: Verify server extension is registered
+        run: |
+          jupyter server extension list 2>&1 | tee /tmp/serverext.txt
+          grep -q "hit_jupyterlab_extension" /tmp/serverext.txt && echo "✅ server extension OK" || (echo "❌ server extension NOT found"; exit 1)
+
+      - name: Build wheel
+        run: python -m build --wheel --no-isolation
+
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hit-jupyterlab-extension-wheel-py${{ matrix.python-version }}
+          path: dist/*.whl

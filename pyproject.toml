@@ -1,0 +1,78 @@
+[build-system]
+requires = [
+    "hatchling>=1.5.0",
+    "hatch-jupyter-builder>=0.5",
+    "jupyterlab>=4.0.0,<5.0.0",
+]
+build-backend = "hatchling.build"
+
+[project]
+name = "hit-jupyterlab-extension"
+version = "0.2.0"
+description = "HIT protocol integration for JupyterLab"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+keywords = ["jupyter", "jupyterlab", "hit", "mcp", "ai-agent"]
+classifiers = [
+    "Framework :: Jupyter",
+    "Framework :: Jupyter :: JupyterLab",
+    "Framework :: Jupyter :: JupyterLab :: 4",
+    "Framework :: Jupyter :: JupyterLab :: Extensions",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "websockets>=11.0",
+    "jupyterlab>=4.0.0,<5.0.0",
+]
+
+[project.optional-dependencies]
+mcp = [
+    "mcp>=0.9.0",
+]
+dev = [
+    "hatch",
+    "build",
+]
+
+[project.urls]
+Homepage = "https://github.com/hit-protocol/hit-jupyterlab-extension"
+Repository = "https://github.com/hit-protocol/hit-jupyterlab-extension"
+
+[project.scripts]
+hit-mcp = "hit_jupyterlab_extension.mcp_server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["hit_jupyterlab_extension"]
+artifacts = ["hit-jupyterlab-extension/labextension"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"jupyter-config/server-config/hit_jupyterlab_extension.json" = "etc/jupyter/jupyter_server_config.d/hit_jupyterlab_extension.json"
+"hit-jupyterlab-extension/labextension" = "share/jupyter/labextensions/hit-jupyterlab-extension"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    ".github",
+    "node_modules",
+    "lib",
+    "*.tsbuildinfo",
+]
+
+[tool.hatch.build.hooks.jupyter-builder]
+dependencies = ["hatch-jupyter-builder>=0.5"]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+    "hit-jupyterlab-extension/labextension/package.json",
+]
+skip-if-exists = [
+    "hit-jupyterlab-extension/labextension/package.json",
+]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+build_cmd = "build:prod"
+npm = ["npm"]
+
+[project.entry-points."jupyter_server.extensions"]
+hit_jupyterlab_extension = "hit_jupyterlab_extension"

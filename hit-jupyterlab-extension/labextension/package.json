@@ -1,0 +1,46 @@
+{
+  "name": "hit-jupyterlab-extension",
+  "version": "0.1.0",
+  "description": "HIT protocol integration for JupyterLab",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "license": "BSD-3-Clause",
+  "author": "",
+  "scripts": {
+    "build": "npm run build:lib && npm run build:labextension:dev",
+    "build:prod": "npm run clean && npm run build:lib:prod && npm run build:labextension",
+    "build:labextension": "python -m jupyterlab.labextensions build .",
+    "build:labextension:dev": "python -m jupyterlab.labextensions build --development True .",
+    "build:lib": "tsc --sourceMap",
+    "build:lib:prod": "tsc",
+    "clean": "npm run clean:lib",
+    "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "clean:labextension": "rimraf hit-jupyterlab-extension/labextension hit-jupyterlab-extension/_version.py",
+    "clean:all": "npm run clean:lib && npm run clean:labextension && rimraf node_modules",
+    "watch": "run-p watch:src watch:labextension",
+    "watch:src": "tsc -w --sourceMap",
+    "watch:labextension": "node scripts/watch.js"
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^4.0.0",
+    "@jupyterlab/notebook": "^4.0.0",
+    "@jupyterlab/apputils": "^4.0.0",
+    "@jupyterlab/services": "^7.0.0",
+    "@lumino/messaging": "^2.0.0",
+    "@lumino/widgets": "^2.0.0"
+  },
+  "devDependencies": {
+    "@jupyterlab/builder": "^4.0.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^5.0.0",
+    "typescript": "~5.0.4"
+  },
+  "jupyterlab": {
+    "extension": true,
+    "outputDir": "hit-jupyterlab-extension/labextension",
+    "_build": {
+      "load": "static\\remoteEntry.53921306bd49245655b9.js",
+      "extension": "./extension"
+    }
+  }
+}
