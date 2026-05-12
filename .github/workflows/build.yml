@@ -1,4 +1,4 @@
-﻿name: Build & Verify
+name: Build & Verify
 
 on:
   push:
@@ -24,17 +24,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
 
       - name: Install Node dependencies
         run: npm ci
 
+      - name: Install Python build tools
+        run: pip install hatch hatch-jupyter-builder build jupyterlab
+
       - name: Build TypeScript labextension
         run: npm run build:prod
-
-      - name: Install Python build tools
-        run: pip install hatch hatch-jupyter-builder build
 
       - name: Install extension (with pre-built assets, skipping npm rebuild)
         run: pip install -e ".[mcp]"
