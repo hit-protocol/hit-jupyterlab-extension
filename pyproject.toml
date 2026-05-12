@@ -12,7 +12,7 @@ version = "0.2.0"
 description = "HIT protocol integration for JupyterLab"
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 keywords = ["jupyter", "jupyterlab", "hit", "mcp", "ai-agent"]
 classifiers = [
     "Framework :: Jupyter",
